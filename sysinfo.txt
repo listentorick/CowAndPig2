@@ -1,0 +1,213 @@
+System:
+  OS: Windows 7 Service Pack 1 (6.1.7601)
+  CPU: Intel(R) Core(TM)2 Duo CPU P8600 @ 2.40GHz, count: 2
+  Physical RAM: 3067 MB
+  Addressable RAM: 2048 MB
+
+D3D9:
+  Renderer: ATI Mobility Radeon HD 4670
+  VendorID: 1002
+  Driver: atiumdag.dll 8.14.10.678
+  VRAM: 1019 (via DXGI)
+
+OpenGL:
+  Version: 2.1.8787 FireGL
+  Vendor: ATI Technologies Inc.
+  Renderer: ATI Mobility Radeon HD 4670
+  Driver: RDPDD, version 4456530.4456528.68.33554434
+  VRAM: 1019 (via DXGI)
+  Extensions: GL_AMDX_vertex_shader_tessellator GL_AMD_draw_buffers_blend GL_AMD_performance_monitor GL_AMD_texture_texture4 GL_ARB_color_buffer_float GL_ARB_copy_buffer GL_ARB_depth_buffer_float GL_ARB_depth_texture GL_ARB_draw_buffers GL_ARB_draw_instanced GL_ARB_fragment_program GL_ARB_fragment_program_shadow GL_ARB_fragment_shader GL_ARB_framebuffer_object GL_ARB_framebuffer_sRGB GL_ARB_half_float_pixel GL_ARB_half_float_vertex GL_ARB_instanced_arrays GL_ARB_map_buffer_range GL_ARB_multisample GL_ARB_multitexture GL_ARB_occlusion_query GL_ARB_pixel_buffer_object GL_ARB_point_parameters GL_ARB_point_sprite GL_ARB_shader_objects GL_ARB_shader_texture_lod GL_ARB_shading_language_100 GL_ARB_shadow GL_ARB_shadow_ambient GL_ARB_texture_border_clamp GL_ARB_texture_buffer_object GL_ARB_texture_compression GL_ARB_texture_compression_rgtc GL_ARB_texture_cube_map GL_ARB_texture_env_add GL_ARB_texture_env_combine GL_ARB_texture_env_crossbar GL_ARB_texture_env_dot3 GL_ARB_texture_float GL_ARB_texture_mirrored_repeat GL_ARB_texture_non_power_of_two GL_ARB_texture_rectangle GL_ARB_texture_rg GL_ARB_texture_snorm GL_ARB_transpose_matrix GL_ARB_vertex_array_object GL_ARB_vertex_buffer_object GL_ARB_vertex_program GL_ARB_vertex_shader GL_ARB_window_pos GL_ATI_draw_buffers GL_ATI_envmap_bumpmap GL_ATI_fragment_shader GL_ATI_meminfo GL_ATI_separate_stencil GL_ATI_texture_compression_3dc GL_ATI_texture_env_combine3 GL_ATI_texture_float GL_ATI_texture_mirror_once GL_EXT_abgr GL_EXT_bgra GL_EXT_bindable_uniform GL_EXT_blend_color GL_EXT_blend_equation_separate GL_EXT_blend_func_separate GL_EXT_blend_minmax GL_EXT_blend_subtract GL_EXT_compiled_vertex_array GL_EXT_copy_buffer GL_EXT_copy_texture GL_EXT_draw_buffers2 GL_EXT_draw_instanced GL_EXT_draw_range_elements GL_EXT_fog_coord GL_EXT_framebuffer_blit GL_EXT_framebuffer_multisample GL_EXT_framebuffer_object GL_EXT_framebuffer_sRGB GL_EXT_gpu_program_parameters GL_EXT_gpu_shader4 GL_EXT_multi_draw_arrays GL_EXT_packed_depth_stencil GL_EXT_packed_float GL_EXT_packed_pixels GL_EXT_pixel_buffer_object GL_EXT_point_parameters GL_EXT_provoking_vertex GL_EXT_rescale_normal GL_EXT_secondary_color GL_EXT_separate_specular_color GL_EXT_shadow_funcs GL_EXT_stencil_wrap GL_EXT_subtexture GL_EXT_texgen_reflection GL_EXT_texture3D GL_EXT_texture_array GL_EXT_texture_buffer_object GL_EXT_texture_compression_latc GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc GL_EXT_texture_cube_map GL_EXT_texture_edge_clamp GL_EXT_texture_env_add GL_EXT_texture_env_combine GL_EXT_texture_env_dot3 GL_EXT_texture_filter_anisotropic GL_EXT_texture_integer GL_EXT_texture_lod GL_EXT_texture_lod_bias GL_EXT_texture_mirror_clamp GL_EXT_texture_object GL_EXT_texture_rectangle GL_EXT_texture_sRGB GL_EXT_texture_shared_exponent GL_EXT_texture_snorm GL_EXT_texture_swizzle GL_EXT_transform_feedback GL_EXT_vertex_array GL_EXT_vertex_array_bgra GL_IBM_texture_mirrored_repeat GL_KTX_buffer_region GL_NV_blend_square GL_NV_conditional_render GL_NV_copy_depth_to_color GL_NV_primitive_restart GL_NV_texgen_reflection GL_SGIS_generate_mipmap GL_SGIS_texture_edge_clamp GL_SGIS_texture_lod GL_SUN_multi_draw_arrays GL_WIN_swap_hint WGL_EXT_swap_control
+
+User locale: en-GB
+System locale: en-GB
+
+Running processes:
+ForceField.exe (1916)
+    path: C:\Program Files\CheckPoint\ZAForceField\ForceField.exe
+    company:  Check Point Software Technologies
+    product:  ZoneAlarm Browser Security
+    filedesc: ZoneAlarm Browser Security
+    filever:  1.5.395.0
+    prodver:  1.5.395.0
+taskhost.exe (512)
+    path: C:\Windows\system32\taskhost.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Host Process for Windows Tasks
+    filever:  6.1.7601.18010
+    prodver:  6.1.7601.18010
+rundll32.exe (3972)
+    path: C:\Windows\System32\rundll32.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Windows host process (Rundll32)
+    filever:  6.1.7600.16385
+    prodver:  6.1.7600.16385
+Dwm.exe (3336)
+    path: C:\Windows\system32\Dwm.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Desktop Window Manager
+    filever:  6.1.7600.16385
+    prodver:  6.1.7600.16385
+Explorer.EXE (3864)
+    path: C:\Windows\Explorer.EXE
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Windows Explorer
+    filever:  6.1.7601.17567
+    prodver:  6.1.7601.17567
+jusched.exe (200)
+    path: C:\Program Files\Common Files\Java\Java Update\jusched.exe
+    company:  Sun Microsystems, Inc.
+    product:  Java(TM) Platform SE Auto Updater 2 0
+    filedesc: Java(TM) Update Scheduler
+    filever:  2.1.6.0
+    prodver:  2.1.6.0
+htcUPCTLoader.exe (4052)
+    path: C:\Program Files\HTC\HTC Sync 3.0\htcUPCTLoader.exe
+    company:  
+    product:  HTC UPCT
+    filedesc: HTC UPCT Loader
+    filever:  1.0.2.34
+    prodver:  1.0.2.34
+stxmenumgr.exe (404)
+    path: C:\Program Files\Seagate\SeagateManager\FreeAgent Status\stxmenumgr.exe
+    company:  Seagate LLC
+    product:  Seagate FreeAgent™ Application
+    filedesc: FreeAgent™ Launcher
+    filever:  4.7.0.10
+    prodver:  4.7.0.10
+vprot.exe (1696)
+    path: C:\Program Files\AVG Secure Search\vprot.exe
+    company:  
+    product:  VProtect Application
+    filedesc: VProtect Application
+    filever:  15.4.0.5
+    prodver:  15.4.0.5
+AvastUI.exe (3420)
+    path: C:\Program Files\AVAST Software\Avast\AvastUI.exe
+    company:  AVAST Software
+    product:  avast! Antivirus
+    filedesc: avast! Antivirus
+    filever:  8.0.1489.300
+    prodver:  8.0.1489.300
+SpotifyWebHelper.exe (3468)
+    path: C:\Users\rick\AppData\Roaming\Spotify\Data\SpotifyWebHelper.exe
+    company:  Spotify Ltd
+    product:  Spotify
+    filedesc: SpotifyWebHelper
+    filever:  0.9.1.57
+    prodver:  0.9.1.57
+googledrivesync.exe (3492)
+    path: C:\Program Files\Google\Drive\googledrivesync.exe
+    company:  Google
+    product:  Google Drive
+    filedesc: Google Drive
+    filever:  1.10.4769.632
+    prodver:  1.10.4769.632
+Steam.exe (3184)
+    path: C:\Program Files\Steam\Steam.exe
+    company:  Valve Corporation
+    product:  Steam Client Bootstrapper
+    filedesc: Steam Client Bootstrapper (buildbot_winslave04_steam_steam_rel_client_win32@winslave04)
+    filever:  1.84.85.72
+    prodver:  1.0.0.1
+StikyNot.exe (3568)
+    path: C:\Windows\System32\StikyNot.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Sticky Notes
+    filever:  6.1.7600.16385
+    prodver:  6.1.7600.16385
+SSScheduler.exe (4160)
+    path: C:\Program Files\McAfee Security Scan\3.0.318\SSScheduler.exe
+    company:  McAfee, Inc.
+    product:  McAfee Security Scanner +
+    filedesc: McAfee Security Scanner Scheduler
+    filever:  3.0.318.0
+    prodver:  3.0.0.0
+ApacheMonitor.exe (4188)
+    path: C:\Program Files\Apache Software Foundation\Apache2.2\bin\ApacheMonitor.exe
+    company:  Apache Software Foundation
+    product:  Apache HTTP Server
+    filedesc: Apache HTTP Server Monitor
+    filever:  2.2.22.0
+    prodver:  2.2.22.0
+googledrivesync.exe (4972)
+    path: C:\Program Files\Google\Drive\googledrivesync.exe
+    company:  Google
+    product:  Google Drive
+    filedesc: Google Drive
+    filever:  1.10.4769.632
+    prodver:  1.10.4769.632
+wuauclt.exe (2696)
+    path: C:\Windows\system32\wuauclt.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Windows Update
+    filever:  7.6.7600.256
+    prodver:  7.6.7600.256
+adb.exe (3016)
+    path: C:\android-sdk-windows\platform-tools\adb.exe
+    company:  
+    product:  
+    filedesc: 
+    filever:  0.0.0.0
+    prodver:  0.0.0.0
+jucheck.exe (4288)
+    path: C:\Program Files\Common Files\Java\Java Update\jucheck.exe
+    company:  Sun Microsystems, Inc.
+    product:  Java(TM) Platform SE Auto Updater 2 0
+    filedesc: Java(TM) Update Checker
+    filever:  2.1.6.0
+    prodver:  2.1.6.0
+MonoDevelop.exe (5056)
+    path: C:\Program Files\Unity\MonoDevelop\bin\MonoDevelop.exe
+    company:  
+    product:  MonoDevelop
+    filedesc: MonoDevelop
+    filever:  2.6.0.0
+    prodver:  2.6.0.0
+cmd.exe (4108)
+    path: C:\Windows\System32\cmd.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Windows Command Processor
+    filever:  6.1.7601.17514
+    prodver:  6.1.7601.17514
+conhost.exe (4640)
+    path: C:\Windows\system32\conhost.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Console Window Host
+    filever:  6.1.7601.17965
+    prodver:  6.1.7601.17965
+sh.exe (5960)
+    path: C:\Program Files\Git\bin\sh.exe
+    company:  
+    product:  
+    filedesc: 
+    filever:  0.0.0.0
+    prodver:  0.0.0.0
+slui.exe (3440)
+    path: C:\Windows\System32\slui.exe
+    company:  Microsoft Corporation
+    product:  Microsoft® Windows® Operating System
+    filedesc: Windows Activation Client
+    filever:  6.1.7601.17514
+    prodver:  6.1.7601.17514
+SearchFilterHost.exe (5036)
+    path: C:\Windows\system32\SearchFilterHost.exe
+    company:  Microsoft Corporation
+    product:  Windows® Search
+    filedesc: Microsoft Windows Search Filter Host
+    filever:  7.0.7601.17610
+    prodver:  7.0.7601.17610
+UnityBugReporter.exe (5412)
+    path: C:\Program Files\Unity\Editor\UnityBugReporter.exe
+    company:  Unity Technologies ApS
+    product:  Unity Bug Reporter
+    filedesc: Unity Bug Reporter
+    filever:  4.1.5.1944
+    prodver:  4.1.5.1944
