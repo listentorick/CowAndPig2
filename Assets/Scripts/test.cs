@@ -62,85 +62,107 @@ public class test : MonoBehaviour {
 	void InitialiseTunnelPath() {
 		tunnelPath.Clear();
 		tunnelPath.Add(new Vector2(topLeftViewPort.z-500,TUNNEL_HEIGHT));
-		tunnelPath.Add(new Vector2(0,TUNNEL_HEIGHT));
+		tunnelPath.Add(new Vector2(30,TUNNEL_HEIGHT));
 	}
 	
-	private Vector3 target;
-	private Vector3 lastTarget;
+	private float targetGradient;
+	private const float maxDeltaAngle = Mathf.PI/8; //45 degrees!
+	private float requestedGradient;
 	
+	private void UpdateRequestedGradient() {
+		
+		Vector3 target = UserInput.Instance.GetTarget();
+
+		bool remainOnCurrentPath =false;
+		if (target.x==0 && target.y==0 && target.z==0) {
+			
+			//this represents a null target.
+			//in this case we continue to make use of any existing gradient...
+			remainOnCurrentPath = true;
+		} else {
+		
+			//calculate the gradient of this target
+			//store it later use
+		
+			target.y = target.y + TUNNEL_HEIGHT;
+			
+			Vector2 lastPoint = new Vector2(car.position.z,car.position.y);
+			Vector2 lastDiff = new Vector2(target.z,target.y) - lastPoint;
+		
+			//Lets calculate the new gradient
+			if(!remainOnCurrentPath){
+				requestedGradient = Mathf.Atan2(lastDiff.y,lastDiff.x);
+			}
+		}
+		
+	}
+	
+	private float maxBufferLength = 20f;
 	/// <summary>
 	/// Updates the tunnel path based upon the mouses position
 	/// </summary>/
 	void UpdateTunnelPath() {
-			
-		target = UserInput.Instance.GetTarget();
 		
-		bool remainOnCurrentPath =false;
-		if (target.x==0 && target.y==0 && target.z==0) {;
-			remainOnCurrentPath = true;
-		}
-				
-		float nextY = 0;
-		
+		//We cant really calculate our gradients easily so.. lets ignore any changes
 		if(this.tunnelPath.Count<2) return;
 		
-		int secondToLastPointIndex = this.tunnelPath.Count-2;
+		//Updates the requested gradient based upon user input
+		UpdateRequestedGradient();
+		
+		//Lets calculate the current gradient
 		Vector2 secondToLastPoint = this.tunnelPath[this.tunnelPath.Count-2];
 		Vector2 lastPoint = this.tunnelPath[this.tunnelPath.Count-1];
-		Vector2 newPoint;
-		float lastY = lastPoint.y;
-    	float dY;
 		
-		Vector2 diff = lastPoint - secondToLastPoint; 
+		Vector2 lastDiff = lastPoint - secondToLastPoint; 
+		float currentGradient = Mathf.Atan2(lastDiff.y,lastDiff.x);
 		
-		float angle = Mathf.Atan2(diff.y,diff.x);
-		float bufferZ = car.position.z +  (20f * Mathf.Cos(angle));
-		float nextZ  = bufferZ + 1;
+		//Are we with the buffer?
+		//The buffer is distance in front of the car.
+		//If the last point in the tunnel path is within this buffer
+		//we need a new point
 		
-		Vector2 targetAsVector2 = new Vector2(target.z,target.y);
-		
+		float bufferZ = car.position.z +  (maxBufferLength * Mathf.Cos(currentGradient));
+
 		if(lastPoint.x < bufferZ){
 			
-			//whats the new gradient?
-			diff = targetAsVector2 - lastPoint; 
-			angle = Mathf.Atan2(diff.y,diff.x);
+			//We need a new point!!
 			
-			nextZ = lastPoint.x + (20f * Mathf.Cos(angle));
-			nextY = lastPoint.y + (20f * Mathf.Tan(angle));
-			//our new x and y are...
+			//This is the point at which we care about our new gradient
+			//its a this point we want to check that the last click/touched point is a reasonable gradient to apply
 			
-			//The last 
+			//we want to make sure that the requested gradient isnt too big
 			
-			if(remainOnCurrentPath) {
-				
-				//if(lastTarget==null){
-					nextY = lastY;
-					nextZ = lastPoint.x + 20f;
-		//		} else {
-					//nextZ = lastTarget.x + 20f;
-					//nextY = lastTarget.y;
-		//		}
-								
-			} else {
 
-				if(nextY-TUNNEL_HEIGHT>0){ //
-					nextY = TUNNEL_HEIGHT;
+			//gradient will negative if we're going down
+			//gradient will be positive if we're going up.
+			float deltaAngle = requestedGradient - currentGradient;
+		
+			bool isDeltaAngleToBig = (Mathf.Abs(requestedGradient)-Mathf.Abs(currentGradient)) > maxDeltaAngle;
+		
+			if(isDeltaAngleToBig){
+				
+				//was going up, still going up
+				if(deltaAngle<0){
+					requestedGradient = currentGradient - maxDeltaAngle;
 				}
+				else {
+					requestedGradient = currentGradient + maxDeltaAngle;
+				}
+			} else {
+				requestedGradient = requestedGradient;
 			}
 			
-			newPoint = new Vector2(nextZ,nextY);
 			
-			//newPoint = Vector2.Lerp(lastPoint,newPoint,0.5f);
+			float nextZ = lastPoint.x + (maxBufferLength * Mathf.Cos(requestedGradient));
+			float nextY = lastPoint.y + (maxBufferLength * Mathf.Tan(requestedGradient));
 			
-			//if(!isFlat || HasGradientChanged(newPoint)){
-				this.tunnelPath.Add(newPoint);
-			//} else {
-			//	Debug.Log("updating old point");
-				//just update the old last point...
-			//	this.tunnelPath[this.tunnelPath.Count-1] = newPoint;
-			//}
+			if(nextY-TUNNEL_HEIGHT>0){
+				nextY = TUNNEL_HEIGHT;
+			}
 			
-		
+			Vector2 nextPoint = new Vector2(nextZ,nextY);
+			this.tunnelPath.Add(nextPoint);
+
 			tunnelPathUpdated = true;
 	
     	}
@@ -326,7 +348,7 @@ public class test : MonoBehaviour {
 	
 		this.UpdateCameraBounds();
 		this.UpdateTunnelPath();
-		//this.CullTunnelPath();
+		this.CullTunnelPath();
 		
 		if(tunnelPathUpdated) {
 			

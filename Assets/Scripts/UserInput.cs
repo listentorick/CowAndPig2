@@ -29,7 +29,13 @@ public class UserInput : MonoBehaviour {
 	public Vector3 GetTarget(){
 		
 		#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
-		return 	Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.mainCamera.transform.position.x));
+		
+		if(Input.GetMouseButton(0)){
+			Debug.Log ("mouse down");
+			return 	Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.mainCamera.transform.position.x));
+		} else {
+			return new Vector3(0,0,0);
+		}
 		#endif
 		
 		#if UNITY_IPHONE || UNITY_ANDROID
