@@ -34,34 +34,35 @@ public class test : MonoBehaviour {
 	
 	private Polygon surfacePolygon = new Polygon(4);
 	
-	private Vector3 topLeftViewPort;
+	private Vector3 bottomLeftViewPort;
 	private Vector3 topRightViewPort;
 	
 
 	void UpdateCameraBounds() {
-		topLeftViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1, Camera.mainCamera.transform.position.x));
-		topRightViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, Camera.mainCamera.transform.position.x));
+		bottomLeftViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,0, Camera.mainCamera.transform.position.z));
+		topRightViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, Camera.mainCamera.transform.position.z));
+		
 	}
 	
 	void UpdateSurfacePolygon() {
 			
 		surfacePolygon.Clear();
-		surfacePolygon.Add(new Vector2(topLeftViewPort.z, 0));
-		surfacePolygon.Add(new Vector2(topRightViewPort.z, 0));	
-		surfacePolygon.Add(new Vector2(topRightViewPort.z, -1000));
-		surfacePolygon.Add(new Vector2(topLeftViewPort.z, -1000));
+		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x, 0));
+		surfacePolygon.Add(new Vector2(topRightViewPort.x, 0));	
+		surfacePolygon.Add(new Vector2(topRightViewPort.x, -1000));
+		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x, -1000));
 
 	}
 	
 	private Polygon tunnelPath = new Polygon();
 	private bool tunnelPathUpdated = false;
-	
+	private bool firstRender = true;
 	/// <summary>
 	/// Initialises the tunnel path.
 	/// </summary>
 	void InitialiseTunnelPath() {
 		tunnelPath.Clear();
-		tunnelPath.Add(new Vector2(topLeftViewPort.z-500,TUNNEL_HEIGHT));
+		tunnelPath.Add(new Vector2(bottomLeftViewPort.x-500,TUNNEL_HEIGHT));
 		tunnelPath.Add(new Vector2(30,TUNNEL_HEIGHT));
 	}
 	
@@ -121,9 +122,9 @@ public class test : MonoBehaviour {
 		//If the last point in the tunnel path is within this buffer
 		//we need a new point
 		
-		float bufferZ = car.position.z +  (maxBufferLength * Mathf.Cos(currentGradient));
+		float bufferX = car.position.x +  (maxBufferLength * Mathf.Cos(currentGradient));
 
-		if(lastPoint.x < bufferZ){
+		if(lastPoint.x < bufferX){
 			
 			//We need a new point!!
 			
@@ -153,19 +154,21 @@ public class test : MonoBehaviour {
 			}
 			
 			
-			float nextZ = lastPoint.x + (maxBufferLength * Mathf.Cos(requestedGradient));
+			float nextX = lastPoint.x + (maxBufferLength * Mathf.Cos(requestedGradient));
 			float nextY = lastPoint.y + (maxBufferLength * Mathf.Tan(requestedGradient));
 			
 			if(nextY-TUNNEL_HEIGHT>0){
 				nextY = TUNNEL_HEIGHT;
 			}
 			
-			Vector2 nextPoint = new Vector2(nextZ,nextY);
+			Vector2 nextPoint = new Vector2(nextX,nextY);
 			this.tunnelPath.Add(nextPoint);
 
 			tunnelPathUpdated = true;
 	
     	}
+		
+		
 	}
 	
 	private bool HasGradientChanged(Vector2 newPoint){
@@ -177,7 +180,7 @@ public class test : MonoBehaviour {
 	private void CullTunnelPath() {
 		//find the first point which is less that topLeftViewPort.x and remove it!
 		for(int i=tunnelPath.Count-1;  i>=0; i--){
-			if(tunnelPath[i].x < (topLeftViewPort.z - 20f)){
+			if(tunnelPath[i].x < (bottomLeftViewPort.x - 20f)){
 				tunnelPath.RemoveRange(0,i);
 				tunnelPathUpdated = true;
 				break;
@@ -345,12 +348,16 @@ public class test : MonoBehaviour {
 	void Update () {
 		
 		this.tunnelPathUpdated = false;
+		
 	
 		this.UpdateCameraBounds();
 		this.UpdateTunnelPath();
-		this.CullTunnelPath();
+		//this.CullTunnelPath();
 		
-		if(tunnelPathUpdated) {
+		if(tunnelPathUpdated || firstRender) {
+			firstRender = false;
+			
+			Mesh mesh = new Mesh();
 			
 			allVerticesToRender.Clear();
 			adaptedPolygons.Clear();
@@ -377,7 +384,7 @@ public class test : MonoBehaviour {
 			}
 			
 
-			Mesh mesh = new Mesh();
+			
 			Triangulator tr;
 			int[] triangulatedPolys;
 			
@@ -426,8 +433,6 @@ public class test : MonoBehaviour {
 			}
 			
 			
-			
-			
 			mesh.vertices = allVerticesToRender.ToArray();
 			mesh.triangles = allTriangles.ToArray();
 			
@@ -437,7 +442,6 @@ public class test : MonoBehaviour {
 			
 			meshCollider.sharedMesh = mesh; 	
 			meshFilter.mesh = mesh;
-
 		}
 		
 		//Debug.Log("end start");

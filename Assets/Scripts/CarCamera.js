@@ -9,8 +9,12 @@ function Start () {
 function LateUpdate () {
 
 	
-    var targetPosition = Vector3(120, 0, cameraOffset) + car.position;
-   	var targetLookat = car.position + Vector3(0,0,cameraOffset);
+    var targetPosition = Vector3(cameraOffset, 0, -120) + car.position;
+   	var targetLookat = car.position + Vector3(cameraOffset,0,0);
+   	
+   	// var targetPosition = Vector3(0, 30, 0) + car.position;
+   	//var targetLookat = car.position;
+   	
     transform.position = targetPosition;
 	transform.LookAt(targetLookat);
 }

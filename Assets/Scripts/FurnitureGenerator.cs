@@ -26,19 +26,19 @@ public class FurnitureGenerator : MonoBehaviour {
 		
 		//add the start position
 		points.Add(new Vector2(0,0));
-		CreateBarn(new Vector3(0,0,0) + new Vector3(0,0,100));
+		CreateBarn(new Vector3(100,0,0));
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		Vector3 cameraToRight = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, camera.position.x));
+		Vector3 cameraToRight = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1, camera.position.z));
 		
 		if(barn!=null) {
 			if(IsObjectPassed(barn.GetTransform())) {
 				
 				
-				CreateBarn(new Vector3(0,0,cameraToRight.z) + new Vector3(0,0,100));
+				CreateBarn(new Vector3(cameraToRight.x,0,0) + new Vector3(100,0,0));
 			}
 		}
 		
@@ -50,15 +50,14 @@ public class FurnitureGenerator : MonoBehaviour {
 		}
 		
 		if(activeCows.Count == 0) {
-			CreateCow(new Vector3(0,0,cameraToRight.z) + new Vector3(0,0,100));
+			CreateCow(new Vector3(cameraToRight.x,0,0) + new Vector3(100,0,0));
 		}
 	
 	}
 	
-
 	private bool IsObjectPassed(Transform gameObject){
-		Vector3 cameraToLeft = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1, camera.position.x));
-		return gameObject.position.z < cameraToLeft.z;
+		Vector3 cameraToLeft = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, camera.position.z));
+		return gameObject.position.x < cameraToLeft.x;
 	}
 	
 	void CreateCow(Vector3 position){
@@ -89,9 +88,8 @@ public class FurnitureGenerator : MonoBehaviour {
 		if(barn == null) {
 			barn = (BarnController)Instantiate(barnPrefab,position, Quaternion.identity);
 			barn.carController = car;
-		} else {
-			//just reuse our current instance and move it yonder
-			barn.GetTransform().position = position;
-		}
+		} 
+		
+		barn.GetTransform().position = position + new Vector3(0,0,30);
 	}
 }

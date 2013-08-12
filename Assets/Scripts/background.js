@@ -36,7 +36,7 @@ function Start () {
 
         (GetComponent(MeshFilter) as MeshFilter).mesh = mesh;   
       //  (GetComponent(MeshCollider) as MeshCollider).mesh = mesh; 	
-        (GetComponent(MeshRenderer) as MeshRenderer).material = backgroundMaterial;
+       (GetComponent(MeshRenderer) as MeshRenderer).material = backgroundMaterial;
         
         
 
@@ -45,9 +45,9 @@ function Start () {
 
 function Update () {
 	
-	this.transform.position.x = -450;
+	this.transform.position.z = 450;
 		this.transform.position.y = Camera.main.transform.position.y - height/2;
-		this.transform.position.z = Camera.main.transform.position.z - width/2;
+		this.transform.position.x = Camera.main.transform.position.x - width/2;
 	
 }
 
