@@ -27,10 +27,8 @@ public class CreatureController : BaseController {
 		
 		//the barn is responsible for asking the truck if it has any little creatures.
 		//if so it should remove them from the car...
-		if(carController.collider == other) {
-			
+		if(carController.IsCarCollider(other)) {
 			OnCaught();
-			//Debug.Log("WOOP");
 		}
 	}
 }

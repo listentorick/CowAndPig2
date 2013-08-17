@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CarController : BaseController {
 	
+	public Collider bottomCollider;
+	public Collider topCollider;
 	public WheelCollider wheelFL;
 	public WheelCollider wheelFR;
 	public WheelCollider wheelRL;
@@ -13,7 +15,6 @@ public class CarController : BaseController {
 
 	// Use this for initialization
 	void Start () {
-		
 		this.rigidbody.centerOfMass += new Vector3(0f,-3f,1.0f);
 	}
 	
@@ -35,5 +36,10 @@ public class CarController : BaseController {
 			wheelFL.motorTorque = 0;
 		}
 	
+	}
+	
+	public bool IsCarCollider(Collider collider) {
+		return collider==bottomCollider || collider ==topCollider;
+		
 	}
 }

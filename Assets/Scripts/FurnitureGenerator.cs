@@ -50,7 +50,7 @@ public class FurnitureGenerator : MonoBehaviour {
 		}
 		
 		if(activeCows.Count == 0) {
-			CreateCow(new Vector3(cameraToRight.x,0,0) + new Vector3(100,0,0));
+			CreateCow(new Vector3(cameraToRight.x,0,0) + new Vector3(100,5,5));
 		}
 	
 	}
@@ -61,9 +61,13 @@ public class FurnitureGenerator : MonoBehaviour {
 	}
 	
 	void CreateCow(Vector3 position){
+		
+		
+		
 		CreatureController cow;
 		if(cowPool.Count>0){
 			cow = cowPool[0];
+			activeCows.Add(cow);
 			cow.GetTransform().position = position;
 		} else {
 			cow = (CreatureController)Instantiate(cowPrefab, position, Quaternion.identity);
