@@ -363,61 +363,32 @@ public class test : MonoBehaviour {
 			adaptedPolygons.Clear();
 			allTriangles.Clear();
 			
-			//UpdateTunnelPolygon();
+			UpdateTunnelPolygon();
 			UpdateSurfacePolygon();
 			//UpdateTunnelFloorPolygon();
 			UpdateFrontPolygon(surfacePolygon, tunnelPolygon);
 			
-			//from the Front Polygons we will build the additional face
 			
+			
+			Triangulator tr;
+			int[] triangulatedPolys;
+
+			int triangleOffset = 0;
+			
+			
+			//from the Front Polygons we will build the additional face
 			foreach(Polygon polygon in frontPolygons){
-				
-				//add the first point to the polygon again....
-				
-				
-				
 				
 				//lets treat the polygon as a path
 				//the result of this is JUST used for triangulation
-				adaptedPolygons.Add(CreateSymmetricalPolygonFromPath(polygon, TUNNEL_DEPTH));
+				adaptedPolygons.Add(CreateSymmetricalPolygonFromPath2(polygon, TUNNEL_DEPTH));
 				
 				allVerticesToRender.AddRange(CreateSymmetricalPolygonFromFace(polygon,TUNNEL_DEPTH));
 			
 			}
 			
-			
-			
-			//UpdateTunnelWallPolygon();
-			//UpdateTunnelCeilingPolygon();
-					
-			//Convert to list of list of vector2 rather than points		
-			
-			
-		//	foreach(Polygon polygon in frontPolygons){
-				
-		//		List<Vector2> adaptedPolygon = new List<Vector2>();
-		//	  	adaptedPolygons.Add(adaptedPolygon);
-		//		foreach(Vector2 point in polygon){
-		//			adaptedPolygon.Add(new Vector2(point.x,point.y));
-		//			allVerticesToRender.Add(new Vector3(point.x,point.y,0));
-		//		}
-		//	}
-			
-
-			
-			Triangulator tr;
-			int[] triangulatedPolys;
-			
-			//List<int> allTriangles = new List<int>();
-			
-			int triangleOffset = 0;
-			
 			foreach(List<Vector2> adaptedPolygon in adaptedPolygons){
 			
-		//		triangulatedPolys = triangulator.Triangulate(adaptedPolygon.ToArray());
-		//		triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
-		//		allTriangles.AddRange(triangulatedPolys);
-		//		triangleOffset += adaptedPolygon.Count;
 				triangulatedPolys = triangulateFloorVertices(adaptedPolygon);
 				triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
 				allTriangles.AddRange(triangulatedPolys);
@@ -425,37 +396,30 @@ public class test : MonoBehaviour {
 				
 			}
 			
-			//Now lets add the floor polygon...
-		//	allVerticesToRender.AddRange(tunnelFloorPolygonToRender);
+			adaptedPolygons.Clear();
 			
-			//now we triangulate the floor..
-		//	triangulatedPolys = triangulateFloorVertices(tunnelFloorPolygon);
-		//	triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
-		//	allTriangles.AddRange(triangulatedPolys);
-		//	triangleOffset = allVerticesToRender.Count;
+			//Now draw the front face.
+
+			foreach(Polygon polygon in frontPolygons){
+				
+				List<Vector2> adaptedPolygon = new List<Vector2>();
+			  	adaptedPolygons.Add(adaptedPolygon);
+				foreach(Vector2 point in polygon){
+					adaptedPolygon.Add(new Vector2(point.x,point.y));
+					allVerticesToRender.Add(new Vector3(point.x,point.y,0));
+				}
+			}
 			
-					
-			//Now triangulate the back wall
-		//	allVerticesToRender.AddRange(tunnelWallPolygonToRender);
-		//	triangulatedPolys = triangulateFloorVertices(tunnelPolygon);
-			//triangulatedPolys = triangulator.Triangulate(tunnelPolygon.ToArray());
-		//	triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
-		//	allTriangles.AddRange(triangulatedPolys);
+
+			foreach(List<Vector2> adaptedPolygon in adaptedPolygons){
 			
+				triangulatedPolys = triangulator.Triangulate(adaptedPolygon.ToArray());
+				triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
+				allTriangles.AddRange(triangulatedPolys);
+				triangleOffset += adaptedPolygon.Count;
 			
-			
-			
-			//add ceiling polys
-		//	triangleOffset = allVerticesToRender.Count;
-		//	allVerticesToRender.AddRange(ceilingVerticesToRender);
-			
-		//	foreach(List<Vector2> adaptedPolygon in ceilingPolygons){
-		//	
-		//		triangulatedPolys = triangulateFloorVertices(adaptedPolygon);
-		//		triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
-		//		allTriangles.AddRange(triangulatedPolys);
-		//		triangleOffset+= adaptedPolygon.Count;
-		//	}
+			}
+		
 			
 			
 			mesh.vertices = allVerticesToRender.ToArray();
@@ -468,8 +432,7 @@ public class test : MonoBehaviour {
 			meshCollider.sharedMesh = mesh; 	
 			meshFilter.mesh = mesh;
 		}
-		
-		//Debug.Log("end start");
+
 		
 	}
 	
@@ -479,19 +442,19 @@ public class test : MonoBehaviour {
 		
 		List<Vector3> sexyPolygon = new List<Vector3>();
 		foreach(Vector2 point in face){
-			sexyPolygon.Add(new Vector3(point.x,point.y,zOffset));
+			sexyPolygon.Add(new Vector3(point.x,point.y,0));
 		}
 		
 		//add the first point AGAIN so we close this poly....
-		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,zOffset));
 		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,0));
+		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,zOffset));
 		
 		//Initialise the polygon with the path we have
 		Vector2 currentPoint;
 		//We need to create the mirror of each point
 		for(int i=face.Count-1;  i>=0; i--){
 			currentPoint = face[i];
-			sexyPolygon.Add(new Vector3(currentPoint.x, currentPoint.y,0));
+			sexyPolygon.Add(new Vector3(currentPoint.x, currentPoint.y,zOffset));
 		}
 		
 		return sexyPolygon;
@@ -510,24 +473,50 @@ public class test : MonoBehaviour {
 	/// <param name='offset'>
 	/// Offset.
 	/// </param>
-	Polygon CreateSymmetricalPolygonFromPath(Polygon path, float yOffset) {
+	Polygon CreateSymmetricalPolygonFromPath2(Polygon path, float yOffset) {
 		
+		Polygon face = new Polygon();
+		
+		foreach(Vector2 p in path) {
+			face.Add(new Vector2(p.x,p.y + (long)yOffset));
+		}
 		//Initialise the polygon with the path we have
-		Polygon face = new Polygon(path);
+		//Polygon face = new Polygon(path);
 		
-		face.Add(new Vector2(path[0].x,path[0].y));
-		face.Add(new Vector2(path[0].x,path[0].y + (long)yOffset));
+		face.Add(new Vector2(path[0].x,path[0].y+ (long)yOffset));
+		face.Add(new Vector2(path[0].x,path[0].y ));
 		
 		Vector2 currentPoint;
 		//We need to create the mirror of each point
 		for(int i=path.Count-1;  i>=0; i--){
 			currentPoint = path[i];
-			face.Add(new Vector2(currentPoint.x, currentPoint.y + (long)yOffset));
+			face.Add(new Vector2(currentPoint.x, currentPoint.y ));
 		}
 		
 		return face;
 	}
 	
+	Polygon CreateSymmetricalPolygonFromPath(Polygon path, float yOffset) {
+ 		
+
+ 		//Initialise the polygon with the path we have
+		Polygon face = new Polygon(path);
+
+ 		
+		//face.Add(new Vector2(path[0].x,path[0].y));
+//		face.Add(new Vector2(path[0].x,path[0].y + (long)yOffset));
+
+ 		
+ 		Vector2 currentPoint;
+ 		//We need to create the mirror of each point
+ 		for(int i=path.Count-1;  i>=0; i--){
+ 			currentPoint = path[i];
+			face.Add(new Vector2(currentPoint.x, currentPoint.y + (long)yOffset));
+
+ 		}
+ 		
+ 		return face;
+	}
 	
 	int[] triangulateFloorVertices(List<Vector2> verticesToTriangulate) {
     
