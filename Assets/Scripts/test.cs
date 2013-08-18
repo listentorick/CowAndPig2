@@ -192,7 +192,7 @@ public class test : MonoBehaviour {
 	
 	private const int TUNNEL_HEIGHT = 20;
 	private const int TUNNEL_DEPTH = 10;
-	
+	private const int LANDSCAPE_DEPTH = 60;
 	
 		
 	private Polygon tunnelPolygon = new Polygon();
@@ -247,12 +247,16 @@ public class test : MonoBehaviour {
 			
 			UpdateFrontPolygon(surfacePolygon, tunnelPolygon);
 			
-			
-			
 			Triangulator tr;
 			int[] triangulatedPolys;
 
 			int triangleOffset = 0;
+			
+			
+			//frontPolygons.Clear();
+			//frontPolygons.Add(surfacePolygon);
+			
+			
 			
 			
 			//from the Front Polygons we will build the additional face
@@ -300,30 +304,23 @@ public class test : MonoBehaviour {
 			}
 		
 			//create the 'back'
-			List<Vector3> back = new List<Vector3>();
 			foreach(Vector2 v in surfacePolygon){
-				back.Add(new Vector3(v.x,v.y,TUNNEL_DEPTH));
+				allVerticesToRender.Add(new Vector3(v.x,v.y,TUNNEL_DEPTH));
 			}
-			
-			allVerticesToRender.AddRange(back);
-			
+				
 			triangulatedPolys = triangulator.Triangulate(surfacePolygon.ToArray());
 			triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
 			allTriangles.AddRange(triangulatedPolys);
 			
 			triangleOffset = allVerticesToRender.Count;
 			
-			allVerticesToRender.AddRange(CreateSymmetricalPolygonFromFace(surfacePolygon, TUNNEL_DEPTH, TUNNEL_DEPTH*6));
+			allVerticesToRender.AddRange(CreateSymmetricalPolygonFromFace(surfacePolygon, TUNNEL_DEPTH, LANDSCAPE_DEPTH));
 			List<Vector2> backSides = CreateSymmetricalPolygonFromPath2(surfacePolygon, TUNNEL_DEPTH);
-			
-			
 			
 			triangulatedPolys = triangulateFloorVertices(backSides);
 			triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
 			allTriangles.AddRange(triangulatedPolys);
-			//triangleOffset += adaptedPolygon.Count;
-			
-			
+
 			mesh.vertices = allVerticesToRender.ToArray();
 			mesh.triangles = allTriangles.ToArray();
 			
@@ -404,11 +401,7 @@ public class test : MonoBehaviour {
  		//Initialise the polygon with the path we have
 		Polygon face = new Polygon(path);
 
- 		
-		//face.Add(new Vector2(path[0].x,path[0].y));
-//		face.Add(new Vector2(path[0].x,path[0].y + (long)yOffset));
 
- 		
  		Vector2 currentPoint;
  		//We need to create the mirror of each point
  		for(int i=path.Count-1;  i>=0; i--){
