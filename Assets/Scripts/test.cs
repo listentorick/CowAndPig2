@@ -18,6 +18,7 @@ public class test : MonoBehaviour {
 	private MeshFilter meshFilter;
 	private MeshRenderer meshRenderer;
 	private MeshCollider meshCollider;
+	private float maxBufferLength = 20f;
 
 	// Use this for initialization
 	void Start () {
@@ -45,7 +46,7 @@ public class test : MonoBehaviour {
 	}
 	
 	void UpdateSurfacePolygon() {
-			
+		
 		surfacePolygon.Clear();
 		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x, 0));
 		surfacePolygon.Add(new Vector2(topRightViewPort.x, 0));	
@@ -98,7 +99,7 @@ public class test : MonoBehaviour {
 		
 	}
 	
-	private float maxBufferLength = 20f;
+	
 	/// <summary>
 	/// Updates the tunnel path based upon the mouses position
 	/// </summary>/
@@ -200,129 +201,7 @@ public class test : MonoBehaviour {
 		this.tunnelPolygon = CreateSymmetricalPolygonFromPath(tunnelPath, -TUNNEL_HEIGHT);
 	}
 		
-	private List<Vector2> tunnelFloorPolygon = new List<Vector2>();
-	private List<Vector3> tunnelFloorPolygonToRender = new List<Vector3>();
-	
-	
-	void UpdateTunnelFloorPolygon() {
-		
-		tunnelFloorPolygonToRender.Clear();
-	
-		tunnelFloorPolygon.Clear();
-		
-		foreach(Vector2 p in tunnelPath) {
-			tunnelFloorPolygon.Add(new Vector2(p.x,TUNNEL_DEPTH));
-			tunnelFloorPolygonToRender.Add(new Vector3(p.x, p.y-TUNNEL_HEIGHT,TUNNEL_DEPTH));
-		}
-		
-		for(int i=tunnelPath.Count-1;  i>=0; i--){
-			tunnelFloorPolygon.Add(new Vector2(tunnelPath[i].x, 0));
-			tunnelFloorPolygonToRender.Add(new Vector3(tunnelPath[i].x, tunnelPath[i].y-TUNNEL_HEIGHT,0));
-		}	
-	}
-	
-	private List<List<Vector2>> ceilingPolygons = new List<List<Vector2>>();
-	private List<Vector3> ceilingVerticesToRender = new List<Vector3>();
-	
-	void UpdateTunnelCeilingPolygon() {
-		
-		ceilingVerticesToRender.Clear();
-		ceilingPolygons.Clear();
 
-		//First lets seperate out our paths
-		List<Vector2> currentPolygon = new List<Vector2>();
-		//List<Vector3> currentPolygonToRender = new List<Vector3>();
-		//ceilingVerticesToRender.Add(currentPolygonToRender);
-		ceilingPolygons.Add(currentPolygon);
-		bool foundBoundary = false;
-		//Vector2 lastPoint = tunnelPath[tunnelPath.Count-1];
-		foreach(Vector2 p in tunnelPath) {
-			
-			if(p.y>=0){ //make sure the ceiling stops once we get to ground level
-				
-				//need to add a point for where boundary was crossed...
-				
-				foundBoundary = true;
-			} else {
-				
-				//if(foundBoundary==true || p==lastPoint){
-					
-					//next add the bottom to our current path
-				//	for(int i=currentPolygon.Count-1;  i>=0; i--){
-				//		currentPolygon.Add(new Vector2(currentPolygon[i].x, 0));
-				//		ceilingVerticesToRender.Add(new Vector3(currentPolygon[i].x, p.y,0));
-				//	}
-					
-				//	currentPolygon.Reverse();
-				//}
-					//reverse the path so the normal points down.
-					//currentPolygon.Reverse();
-					//currentPolygonToRender.Reverse();
-					
-				if(foundBoundary==true){
-						
-					foundBoundary = false;
-					
-					//We only need to create a new poly if nothings being added to the previous one...
-					if(currentPolygon.Count>0){
-						currentPolygon = new List<Vector2>();
-						ceilingPolygons.Add(currentPolygon);
-					}
-				}
-				
-				//add the point
-				currentPolygon.Add(new Vector2(p.x,p.y));
-				//ceilingVerticesToRender.Add(new Vector3(p.x, p.y,TUNNEL_DEPTH));
-			}
-			
-		}
-		
-		
-		foreach(List<Vector2> path in ceilingPolygons){
-		
-			//add vertices for current paths
-			foreach(Vector2 v in path){
-				ceilingVerticesToRender.Add(new Vector3(v.x,v.y,TUNNEL_DEPTH));
-				//v.y = TUNNEL_DEPTH;
-			}
-			//int i=path.Count-1;
-			//add closest points
-			for(int i=path.Count-1;  i>=0; i--){
-				path.Add(new Vector2(path[i].x, 0));
-				
-				ceilingVerticesToRender.Add(new Vector3(path[i].x, path[i].y,0));
-				//path[i].y = TUNNEL_DEPTH;
-				path[i] = new Vector2(path[i].x,TUNNEL_DEPTH);
-			}
-			
-			
-			
-			
-			path.Reverse();
-		}
-		
-		
-		ceilingVerticesToRender.Reverse();
-	}
-	
-	private List<Vector2> tunnelWallPolygon = new List<Vector2>();
-	private List<Vector3> tunnelWallPolygonToRender = new List<Vector3>();
-
-	void UpdateTunnelWallPolygon() {
-		
-		tunnelWallPolygonToRender.Clear();
-		float y =0;
-		foreach(Vector2 p in tunnelPolygon) {
-			if(p.y > 0) {
-				y=0;
-			} else {
-				y = p.y;
-			}
-			tunnelWallPolygonToRender.Add(new Vector3(p.x, y,TUNNEL_DEPTH));
-		}
-			
-	}
-	
 	private Polygons frontPolygons = new Polygons();
 		
 	private Clipper clipper = new Clipper();
@@ -365,7 +244,7 @@ public class test : MonoBehaviour {
 			
 			UpdateTunnelPolygon();
 			UpdateSurfacePolygon();
-			//UpdateTunnelFloorPolygon();
+			
 			UpdateFrontPolygon(surfacePolygon, tunnelPolygon);
 			
 			
@@ -383,7 +262,7 @@ public class test : MonoBehaviour {
 				//the result of this is JUST used for triangulation
 				adaptedPolygons.Add(CreateSymmetricalPolygonFromPath2(polygon, TUNNEL_DEPTH));
 				
-				allVerticesToRender.AddRange(CreateSymmetricalPolygonFromFace(polygon,TUNNEL_DEPTH));
+				allVerticesToRender.AddRange(CreateSymmetricalPolygonFromFace(polygon,0, TUNNEL_DEPTH));
 			
 			}
 			
@@ -420,6 +299,29 @@ public class test : MonoBehaviour {
 			
 			}
 		
+			//create the 'back'
+			List<Vector3> back = new List<Vector3>();
+			foreach(Vector2 v in surfacePolygon){
+				back.Add(new Vector3(v.x,v.y,TUNNEL_DEPTH));
+			}
+			
+			allVerticesToRender.AddRange(back);
+			
+			triangulatedPolys = triangulator.Triangulate(surfacePolygon.ToArray());
+			triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
+			allTriangles.AddRange(triangulatedPolys);
+			
+			triangleOffset = allVerticesToRender.Count;
+			
+			allVerticesToRender.AddRange(CreateSymmetricalPolygonFromFace(surfacePolygon, TUNNEL_DEPTH, TUNNEL_DEPTH*6));
+			List<Vector2> backSides = CreateSymmetricalPolygonFromPath2(surfacePolygon, TUNNEL_DEPTH);
+			
+			
+			
+			triangulatedPolys = triangulateFloorVertices(backSides);
+			triangulatedPolys = triangulatedPolys.Select(t => {t=t+triangleOffset;return t;}).ToArray();
+			allTriangles.AddRange(triangulatedPolys);
+			//triangleOffset += adaptedPolygon.Count;
 			
 			
 			mesh.vertices = allVerticesToRender.ToArray();
@@ -437,24 +339,24 @@ public class test : MonoBehaviour {
 	}
 	
 	
-	List<Vector3> CreateSymmetricalPolygonFromFace(Polygon face, float zOffset) {
+	List<Vector3> CreateSymmetricalPolygonFromFace(Polygon face, float minZ, float maxZ) {
 		
 		
 		List<Vector3> sexyPolygon = new List<Vector3>();
 		foreach(Vector2 point in face){
-			sexyPolygon.Add(new Vector3(point.x,point.y,0));
+			sexyPolygon.Add(new Vector3(point.x,point.y,minZ));
 		}
 		
 		//add the first point AGAIN so we close this poly....
-		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,0));
-		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,zOffset));
+		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,minZ));
+		sexyPolygon.Add(new Vector3(face[0].x,face[0].y,maxZ));
 		
 		//Initialise the polygon with the path we have
 		Vector2 currentPoint;
 		//We need to create the mirror of each point
 		for(int i=face.Count-1;  i>=0; i--){
 			currentPoint = face[i];
-			sexyPolygon.Add(new Vector3(currentPoint.x, currentPoint.y,zOffset));
+			sexyPolygon.Add(new Vector3(currentPoint.x, currentPoint.y,maxZ));
 		}
 		
 		return sexyPolygon;
