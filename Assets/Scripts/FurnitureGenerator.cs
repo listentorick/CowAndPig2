@@ -35,7 +35,7 @@ public class FurnitureGenerator : MonoBehaviour {
 		Vector3 cameraToRight = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1, camera.position.z));
 		
 		if(barn!=null) {
-			if(IsObjectPassed(barn.GetTransform())) {
+			if(IsObjectPassed(barn)) {
 				
 				
 				CreateBarn(new Vector3(cameraToRight.x,0,0) + new Vector3(100,0,0));
@@ -43,37 +43,40 @@ public class FurnitureGenerator : MonoBehaviour {
 		}
 		
 		foreach(CreatureController c in activeCows){
-			if(IsObjectPassed(c.GetTransform())) {
+			if(IsObjectPassed(c)) {
 				//is the cow is no longer on screen, remove it and place it in the cow pool.
 				RemoveCreatureFromScene(c);
 			}
 		}
 		
 		if(activeCows.Count == 0) {
-			CreateCow(new Vector3(cameraToRight.x,0,0) + new Vector3(100,5,5));
+			CreateCow(new Vector3(cameraToRight.x,0,0) + new Vector3(100,0,5));
 		}
 	
 	}
 	
-	private bool IsObjectPassed(Transform gameObject){
+	private bool IsObjectPassed(BaseController gameObject){
 		Vector3 cameraToLeft = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, camera.position.z));
-		return gameObject.position.x < cameraToLeft.x;
+		//Bounds bounds = gameObject.GetBounds().extents.x;
+		
+		return (gameObject.GetTransform().position.x + gameObject.GetBounds().size.x) < cameraToLeft.x;
 	}
 	
 	void CreateCow(Vector3 position){
-		
-		
 		
 		CreatureController cow;
 		if(cowPool.Count>0){
 			cow = cowPool[0];
 			activeCows.Add(cow);
-			cow.GetTransform().position = position;
 		} else {
 			cow = (CreatureController)Instantiate(cowPrefab, position, Quaternion.identity);
 			cow.Caught+=new CaughtEventHandler(CreatureCaught);
 			activeCows.Add(cow);
 		}	
+		
+		position = position + new Vector3(0,(cow.GetBounds().size.y/2),0);
+		cow.GetTransform().position = position;
+		
 		cow.carController = car;
 	}
 	
