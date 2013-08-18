@@ -48,10 +48,10 @@ public class test : MonoBehaviour {
 	void UpdateSurfacePolygon() {
 		
 		surfacePolygon.Clear();
-		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x, 0));
-		surfacePolygon.Add(new Vector2(topRightViewPort.x, 0));	
-		surfacePolygon.Add(new Vector2(topRightViewPort.x, -100));
-		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x, -100));
+		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x+100f, 0));
+		surfacePolygon.Add(new Vector2(topRightViewPort.x-100f, 0));	
+		surfacePolygon.Add(new Vector2(topRightViewPort.x-100f, -100));
+		surfacePolygon.Add(new Vector2(bottomLeftViewPort.x+100f, -100));
 
 	}
 	
