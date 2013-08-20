@@ -6,13 +6,15 @@ public class FurnitureGenerator : MonoBehaviour {
 	
 	public Transform camera;
 	public CarController car;
-	public CreatureController cowPrefab;
+	public CreatureController cowPrefab; //used as a template for instantiating
 	public CreatureController pigPrefab;
 	public BarnController barnPrefab;
+	public HUDController hudController;
 	private BarnController barn;
 	
 	private List<CreatureController> activeCows;
 	private List<CreatureController> cowPool;
+	
 	
 	private List<Vector2> points;
 
@@ -81,7 +83,10 @@ public class FurnitureGenerator : MonoBehaviour {
 	}
 	
 	public void CreatureCaught(CreatureController creature){ 
-		RemoveCreatureFromScene(creature);
+		if(car.CanAddCreatureToCargo(creature)){
+			car.AddCreatureToCargo(creature);
+			RemoveCreatureFromScene(creature);
+		}
 	}
 	
 	public void RemoveCreatureFromScene(CreatureController creature) {
@@ -91,12 +96,22 @@ public class FurnitureGenerator : MonoBehaviour {
 	}
 	
 	void CreateBarn(Vector3 position) {
-		
 		if(barn == null) {
 			barn = (BarnController)Instantiate(barnPrefab,position, Quaternion.identity);
 			barn.carController = car;
+			barn.BarnEnter+=new BarnEnterEventHandler(BarnEnter);
 		} 
-		
 		barn.GetTransform().position = position + new Vector3(0,0,30);
+	}
+		
+	public void BarnEnter(BarnController barn) {
+		//int newlyCollected = car.GetCargo().Count;
+		
+		//update the score...
+		//scoreController.addCollected
+		foreach(CreatureController c in car.GetCargo()){
+			hudController.CreatureReturnedToBarn(c);
+		}
+		car.ClearCargo();
 	}
 }

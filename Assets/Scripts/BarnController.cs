@@ -15,15 +15,24 @@ public class BarnController : BaseController {
 	
 	}
 	
-	public void Test(){
-	}
+
+	public event BarnEnterEventHandler BarnEnter;
+	
+	protected virtual void OnBarnEnter() 
+    {
+         if (BarnEnter != null)
+            BarnEnter(this);
+    }
+	
 	
 	void OnTriggerEnter (Collider other ) {
 		
 		//the barn is responsible for asking the truck if it has any little creatures.
 		//if so it should remove them from the car...
-		if(carController.collider == other) {
-			Debug.Log("WOOP");
+		if(carController.IsCarCollider(other)) {
+			OnBarnEnter();
 		}
 	}
 }
+
+ public delegate void BarnEnterEventHandler(BarnController sender);

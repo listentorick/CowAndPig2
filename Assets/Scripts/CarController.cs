@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CarController : BaseController {
 	
@@ -12,7 +13,9 @@ public class CarController : BaseController {
 	
 	public float maxTorque;
 	public float maxVelocity;
-
+	private IList<CreatureController> cargo = new List<CreatureController>();
+	
+	
 	// Use this for initialization
 	void Start () {
 		this.rigidbody.centerOfMass += new Vector3(0f,-3f,1.0f);
@@ -40,6 +43,21 @@ public class CarController : BaseController {
 	
 	public bool IsCarCollider(Collider collider) {
 		return collider==bottomCollider || collider ==topCollider;
-		
+	}
+	
+	public bool CanAddCreatureToCargo(CreatureController c){
+		return true;
+	}
+	
+	public void AddCreatureToCargo(CreatureController c){
+		cargo.Add(c);
+	}
+	
+	public IList<CreatureController> GetCargo(){
+		return cargo;
+	}
+	
+	public void ClearCargo() {
+		cargo.Clear();
 	}
 }

@@ -25,11 +25,22 @@ public class CreatureController : BaseController {
 	
 	void OnTriggerEnter (Collider other ) {
 		
-		//the barn is responsible for asking the truck if it has any little creatures.
-		//if so it should remove them from the car...
+		//Some creatures may not be always collectable.
+		//So the creature decides if it can be collection.
+		//if so, it'll throw its caught event.
 		if(carController.IsCarCollider(other)) {
-			OnCaught();
+			if(CanCreatureBeCaught()){
+				OnCaught();
+			}
 		}
+	}
+	
+	public virtual bool CanCreatureBeCaught(){
+		return true;
+	}
+	
+	public int GetValue(){
+		return 10;
 	}
 }
 
