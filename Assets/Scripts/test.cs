@@ -192,7 +192,7 @@ public class test : MonoBehaviour {
 	
 	private const int TUNNEL_HEIGHT = 20;
 	private const int TUNNEL_DEPTH = 10;
-	private const int LANDSCAPE_DEPTH = 60;
+	private const int LANDSCAPE_DEPTH = 1000;
 	
 		
 	private Polygon tunnelPolygon = new Polygon();

@@ -1,8 +1,8 @@
 #pragma strict
 
 var  backgroundMaterial : Material;
-var width: int = 1024;
-var height: int = 680;
+var width: int = 4096;
+var height: int = 2720;
 function Start () {
 		
 		//var size = 1000;
@@ -37,15 +37,18 @@ function Start () {
         (GetComponent(MeshFilter) as MeshFilter).mesh = mesh;   
       //  (GetComponent(MeshCollider) as MeshCollider).mesh = mesh; 	
        (GetComponent(MeshRenderer) as MeshRenderer).material = backgroundMaterial;
+       
+       // (GetComponent(MeshRenderer) as MeshRenderer).material.mainTextureOffset =  Vector2 (0, -0.6);
         
-        
+         //(GetComponent(MeshRenderer) as MeshRenderer).material.mainTextureScale=  Vector2 (2, 2);
+         //(GetComponent(MeshRenderer) as MeshRenderer).material.mainTexture.wrapMode = TextureWrapMode.Repeat;
 
     	
 }
 
 function Update () {
 	
-	this.transform.position.z = 450;
+	this.transform.position.z = 800;
 		this.transform.position.y = Camera.main.transform.position.y - height/2;
 		this.transform.position.x = Camera.main.transform.position.x - width/2;
 	

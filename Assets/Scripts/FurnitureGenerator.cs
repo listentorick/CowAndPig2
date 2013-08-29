@@ -8,31 +8,90 @@ public class FurnitureGenerator : MonoBehaviour {
 	public CarController car;
 	public CreatureController cowPrefab; //used as a template for instantiating
 	public CreatureController pigPrefab;
+	public BaseController treePrefab;
 	public BarnController barnPrefab;
 	public HUDController hudController;
 	private BarnController barn;
+	public ForestController forestPrefab;
+	public ForestController pineForestPrefab;
 	
 	private List<CreatureController> activeCows;
 	private List<CreatureController> cowPool;
 	
+	private List<ForestController> treePool;
+	private List<ForestController> activeTrees;
+	
+	
+	private List<RockController> rockPool;
+	private List<RockController> activeRocks;
+
+	
+	private Vector3 lastForestPosition = new Vector3(0,0,0);
 	
 	private List<Vector2> points;
+	
+	public MazeManager mazeManager;	
+	private PathGenerator pathGenerator;
+	
+	private List<Bounds> cells;
+	
+	public MeshFilter meshFilter;
+	public MeshRenderer meshRenderer;
+	
+	public RockController rock1Prefab;
+	
+	
+	private int numHorizontalCells = 20;
+	private	int numVerticalCells = 20;
+		
 
 	// Use this for initialization
 	void Start () {
 		
+		
+		pathGenerator = new PathGenerator();
+		
 		activeCows = new List<CreatureController>();
 		cowPool = new List<CreatureController>();
 		
-		points = new List<Vector2>();
+		treePool = new List<ForestController> ();
+		activeTrees = new List<ForestController>();
+		
+		rockPool = new List<RockController>();
+		activeRocks = new List<RockController>();
+		
+		for(var i=0;i<10;i++) {
+			RockController rock = (RockController)Instantiate(rock1Prefab, new Vector3(-1000,0,0), Quaternion.identity);
+			rockPool.Add(rock);
+		}
+		
+		//Populate the pool of trees
+		
+		for(var i=0;i<10;i++) {
+			ForestController forest = (ForestController)Instantiate(forestPrefab, new Vector3(-1000,0,0), Quaternion.identity);
+			treePool.Add(forest);
+		}
+		
+		
+		points = pathGenerator.GeneratePath(new Vector2(0,0));
+				
+		mazeManager.CreateCells(new Vector3(0,0,0),20,10,20);
+		
+		foreach(RockController rock in rockPool){
+			mazeManager.AddToCell(rock);
+		}
+
 		
 		//add the start position
-		points.Add(new Vector2(0,0));
 		CreateBarn(new Vector3(100,0,0));
 	}
 	
+	
+		
 	// Update is called once per frame
 	void Update () {
+		
+		
 		
 		Vector3 cameraToRight = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1, camera.position.z));
 		
@@ -54,6 +113,19 @@ public class FurnitureGenerator : MonoBehaviour {
 		if(activeCows.Count == 0) {
 			CreateCow(new Vector3(cameraToRight.x,0,0) + new Vector3(100,0,5));
 		}
+		
+		foreach(ForestController t in activeTrees){
+			if(IsObjectPassed(t)) {
+				//is the cow is no longer on screen, remove it and place it in the cow pool.
+				RemoveTreeFromScene(t);
+			}
+		}
+		
+		//if theres anything in the pool, add a new forest.
+		if(treePool.Count > 0) {
+			lastForestPosition = new Vector3(lastForestPosition.x + 100,0,100f + 100f * Random.value);
+			CreateForest(lastForestPosition);
+		}
 	
 	}
 	
@@ -62,6 +134,29 @@ public class FurnitureGenerator : MonoBehaviour {
 		//Bounds bounds = gameObject.GetBounds().extents.x;
 		
 		return (gameObject.GetTransform().position.x + gameObject.GetBounds().size.x) < cameraToLeft.x;
+	}
+	
+	/*
+	void CreateTree(Vector3 position) {
+		BaseController tree;
+		if(treePool.Count>0){
+			tree = treePool[0];
+			activeTrees.Add(tree);
+		} else {
+			tree = (BaseController)Instantiate(treePrefab, position, Quaternion.identity);
+			activeTrees.Add(tree);
+		}	
+		tree.GetTransform().position = position;
+		
+	}*/
+	
+	ForestController CreateForest(Vector3 position) {
+		ForestController forest;
+		forest = treePool[0];
+		activeTrees.Add(forest);
+		treePool.Remove(forest);
+		forest.GetTransform().position = position;
+		return forest;
 	}
 	
 	void CreateCow(Vector3 position){
@@ -93,6 +188,12 @@ public class FurnitureGenerator : MonoBehaviour {
 		activeCows.Remove(creature);
 		cowPool.Add(creature);
 		creature.GetTransform().position = new Vector3(0,0,-1000);
+	}
+	
+	public void RemoveTreeFromScene(ForestController tree) {
+		activeTrees.Remove(tree);
+		treePool.Add(tree);
+		tree.GetTransform().position = new Vector3(0,0,-1000);
 	}
 	
 	void CreateBarn(Vector3 position) {

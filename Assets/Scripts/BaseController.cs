@@ -8,7 +8,7 @@ public class BaseController : MonoBehaviour {
 		return this.transform;
 	}
 	
-	public Bounds GetBounds() {
+	public virtual Bounds GetBounds() {
 		return this.collider.bounds;
 	}
 }

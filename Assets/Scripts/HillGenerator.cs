@@ -8,10 +8,11 @@ public class HillGenerator : MonoBehaviour {
 	private MeshRenderer meshRenderer;
 	private MeshCollider meshCollider;
 	
+
 	// Use this for initialization
 	void Start () {
 		r = new Random();
-		hillPath.Add(new Vector2(-1000,0));
+		hillPath.Add(new Vector2(0,0));
 		meshFilter = GetComponent<MeshFilter>();
 	 	meshRenderer = GetComponent<MeshRenderer>();
 		UpdateCameraBounds();
@@ -28,9 +29,9 @@ public class HillGenerator : MonoBehaviour {
 	private Vector2 topRightViewPort;
 	
 	private Random r;
-	private  int rangeDX = 8;
+	private  int rangeDX = 16;
     private int rangeDY = 4;
-    private float minDX = 4;
+    private float minDX = 8;
     private float minDY = 4;
     private float sign = 1;
 	
@@ -39,6 +40,7 @@ public class HillGenerator : MonoBehaviour {
 	private Triangulator triangulator = new Triangulator();
 	
 	void Update () {
+		
 		UpdateCameraBounds();
 		UpdateHillPath();
 		if(hillPathUpdated) {
@@ -46,7 +48,7 @@ public class HillGenerator : MonoBehaviour {
 			List<Vector2> face = GenerateHillFace(hillPath);
 			List<Vector3> polygon = GenerateHillPolygon(face);
 			
-			int[] triangles = triangulator.Triangulate(face.ToArray());
+			int[] triangles =triangulateFloorVertices(face);
 			
 			Mesh mesh = new Mesh();
 			
@@ -57,14 +59,16 @@ public class HillGenerator : MonoBehaviour {
         	mesh.RecalculateBounds();
 			
 			meshFilter.mesh = mesh;
-		
+
 		}
 	}
 	
 	
 	void UpdateCameraBounds() {
-		bottomLeftViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,0, Camera.mainCamera.transform.position.z));
-		topRightViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, Camera.mainCamera.transform.position.z));	
+		
+		
+		bottomLeftViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,0, Camera.mainCamera.transform.position.z - this.transform.position.z));
+		topRightViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, Camera.mainCamera.transform.position.z - this.transform.position.z));	
 	}
 	
 	void UpdateHillPath() {
@@ -102,6 +106,8 @@ public class HillGenerator : MonoBehaviour {
 			hillFace.Add(new Vector2(currentPoint.x, 0));
 		}
 		
+		//hillFace.Reverse();
+		
 		return hillFace;
 	}
 	
@@ -110,8 +116,10 @@ public class HillGenerator : MonoBehaviour {
 	private List<Vector3> GenerateHillPolygon(IList<Vector2> hillFace){
 		hillPolygon.Clear();
 		
+		//for(int i=hillFace.Count-1;  i>=0; i--){
 		foreach(Vector2 p in hillFace) {
-			hillPolygon.Add(new Vector3(p.x,p.y,this.transform.position.z));
+			hillPolygon.Add(new Vector3(p.x,p.y,0));
+			//hillPolygon.Add(new Vector3(hillFace[i].x,hillFace[i].y,0));
 		}
 		return hillPolygon;
 	}
@@ -127,6 +135,88 @@ public class HillGenerator : MonoBehaviour {
 	
 	bool NeedNewPoint(){
 		//is the last point within the bufferZone?
-		return hillPath[hillPath.Count-1].x<bottomLeftViewPort.x;	
+		//return hillPath[hillPath.Count-1].x<bottomLeftViewPort.x;	
+		
+		
+		Vector3 worldPosition = new Vector3(hillPath[hillPath.Count-1].x, hillPath[hillPath.Count-1].y,this.transform.position.z);
+		Vector3 pos = Camera.main.WorldToViewportPoint(worldPosition);
+		
+		//cube.transform.position = worldPosition;
+		
+		return !(pos.x >1);
+		//amera.main.WorldToViewportPoint();
 	}
+	
+	
+	int[] triangulateFloorVertices(List<Vector2> verticesToTriangulate) {
+    
+    	//some assumptions..
+    	
+    	//imagine 6 points.
+    	// .   .   .
+    	//
+    	// .   .   .
+    	
+    	//the triangle would be
+    	//0,1,4
+    	//1,2,4
+  
+    	//5,0,4
+    	//4,2,3
+    	    	
+    	int lastPointToTriangulate  = (verticesToTriangulate.Count/2);
+    	int lastPointIndex = verticesToTriangulate.Count - 1;
+    	int numTriangles  = lastPointToTriangulate * 6;
+
+    	int[] triangles = new int[numTriangles];
+    	int currentIndex  = 0;
+		bool isEven;
+    	for(int index = 0; index < lastPointToTriangulate - 1; index ++ ){
+    		
+    		
+    		isEven = index % 2==0;
+    	
+    		//top triangle
+	    	triangles[currentIndex] = index;
+	    	currentIndex++;
+	    	triangles[currentIndex] = index + 1;
+    		currentIndex++;
+    		
+    		if(isEven) {
+	    		triangles[currentIndex] = lastPointIndex - (index+1);	
+	    	} else {
+	    		triangles[currentIndex] = lastPointIndex - index;	
+	    	}
+	    	
+	    	
+	    	//bottom triangle
+	    	currentIndex++;
+	    	
+	    	triangles[currentIndex] = lastPointIndex - index;
+	    	currentIndex++;
+	    	
+    		if(isEven) {
+	    		triangles[currentIndex] = index;	
+	    	} else {
+	    		triangles[currentIndex] = index + 1;	
+	    	}
+	    	currentIndex++;
+	    	triangles[currentIndex] = lastPointIndex - (index + 1);
+	    	currentIndex++;
+	    	
+    	}
+    	
+    	return triangles;
+    }
+	//Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+
+ 
+
+//if(pos.x < 0.0) Debug.Log("I am left of the camera's view.");
+
+//if(1.0 < pos.x) Debug.Log("I am right of the camera's view.");
+	
+//if(pos.y < 0.0) Debug.Log("I am below the camera's view.");
+
+//if(1.0 < pos.y) Debug.Log("I am above the camera's view.");
 }
