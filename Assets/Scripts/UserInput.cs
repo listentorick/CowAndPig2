@@ -4,6 +4,7 @@ using System.Collections;
 public class UserInput : MonoBehaviour {
 	
 	private static UserInput instance;
+	public CursorController cursorController;
 	
 	public UserInput()
     {
@@ -25,37 +26,43 @@ public class UserInput : MonoBehaviour {
             return instance;
         }
     }
+	
+	//public void OnMouseDown (){
+	//
+	//	Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.mainCamera.transform.position.z));
+	//	cursorController.GetTransform().position = mousePosition;
+	//}
 		
 	public Vector3 GetTarget(){
 		
 		#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 		
-		if(Input.GetMouseButton(0)){
-			Debug.Log ("mouse down");
-			return 	Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.mainCamera.transform.position.x));
-		} else {
+		//if(Input.GetMouseButton(0)){
+		//	Debug.Log ("mouse down");
+		//	return 	Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,Camera.mainCamera.transform.position.z));
+		//} else {
 			return new Vector3(0,0,0);
-		}
+		//}
 		#endif
 		
 		#if UNITY_IPHONE || UNITY_ANDROID
 		
 		
 		//foreach (Touch touch in Input.touches) {
-		if (Input.touchCount>0){
-			Touch touch = Input.touches[0];
-			if(touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled){
-				return Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x,touch.position.y,Camera.mainCamera.transform.position.x));
-			} else {
+		//if (Input.touchCount>0){
+		//	Touch touch = Input.touches[0];
+		//	if(touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled){
+		//		return Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x,touch.position.y,Camera.mainCamera.transform.position.z));
+		//	} else {
 				return new Vector3(0,0,0);
-			}
-		} else {
+		//	}
+		//} else {
 			//this should be the middle of the screen?? in world space
 			//Vector3 topLeftViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1, Camera.mainCamera.transform.position.x));
 			//Vector3 bottomRightViewPort = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,0, Camera.mainCamera.transform.position.x));
 			//return new Vector3(topLeftViewPort.x, bottomRightViewPort.y + ((topLeftViewPort.y - bottomRightViewPort.y)/2), bottomRightViewPort.z);
-			return new Vector3(0,0,0);
-		}
+	//		return new Vector3(0,0,0);
+	//	}
 		#endif
 	
 	}

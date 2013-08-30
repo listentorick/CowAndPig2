@@ -91,7 +91,7 @@ public class FurnitureGenerator : MonoBehaviour {
 		
 		//mazeManager.MarkCellsAsPath(bounds);
 		
-		mazeManager.RenderCells(bounds);
+		//mazeManager.RenderCells(bounds);
 	
 		
 		foreach(RockController rock in rockPool){

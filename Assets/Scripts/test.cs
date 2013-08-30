@@ -13,6 +13,7 @@ public class test : MonoBehaviour {
 	private System.Collections.Generic.List<Polygon> clip = new System.Collections.Generic.List<Polygon>();
 	private System.Collections.Generic.List<Polygon> subj = new System.Collections.Generic.List<Polygon>();
 	
+	public CursorController cursorController;
 	public Transform car;
 	
 	private MeshFilter meshFilter;
@@ -73,28 +74,16 @@ public class test : MonoBehaviour {
 	
 	private void UpdateRequestedGradient() {
 		
-		Vector3 target = UserInput.Instance.GetTarget();
+		Vector3 target = cursorController.GetTransform().position;
+		
+		//bool remainOnCurrentPath =false;
+		if (target.x>car.transform.position.x) {
 
-		bool remainOnCurrentPath =false;
-		if (target.x==0 && target.y==0 && target.z==0) {
+			Vector2 lastPoint = new Vector2(car.position.x,car.position.y);
+			Vector2 lastDiff = new Vector2(target.x,target.y) - lastPoint;
+		
+			requestedGradient = Mathf.Atan2(lastDiff.y,lastDiff.x);
 			
-			//this represents a null target.
-			//in this case we continue to make use of any existing gradient...
-			remainOnCurrentPath = true;
-		} else {
-		
-			//calculate the gradient of this target
-			//store it later use
-		
-			target.y = target.y + TUNNEL_HEIGHT;
-			
-			Vector2 lastPoint = new Vector2(car.position.z,car.position.y);
-			Vector2 lastDiff = new Vector2(target.z,target.y) - lastPoint;
-		
-			//Lets calculate the new gradient
-			if(!remainOnCurrentPath){
-				requestedGradient = Mathf.Atan2(lastDiff.y,lastDiff.x);
-			}
 		}
 		
 	}
@@ -124,8 +113,10 @@ public class test : MonoBehaviour {
 		//we need a new point
 		
 		float bufferX = car.position.x +  (maxBufferLength * Mathf.Cos(currentGradient));
-
-		if(lastPoint.x < bufferX){
+		bool needNewPoint = lastPoint.x < bufferX;
+		
+		//needNewPoint = true;
+		if(needNewPoint){
 			
 			//We need a new point!!
 			
@@ -140,7 +131,7 @@ public class test : MonoBehaviour {
 			float deltaAngle = requestedGradient - currentGradient;
 		
 			bool isDeltaAngleToBig = (Mathf.Abs(requestedGradient)-Mathf.Abs(currentGradient)) > maxDeltaAngle;
-		
+	
 			if(isDeltaAngleToBig){
 				
 				//was going up, still going up
