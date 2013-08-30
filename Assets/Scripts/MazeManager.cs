@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class MazeManager : MonoBehaviour {
 
@@ -22,10 +23,7 @@ public class MazeManager : MonoBehaviour {
 	public void CreateCells(Vector3 offset, int numHorizontalCells, int numVerticalCells, int cellSize) {
 		
 		
-		Mesh mesh = new Mesh();
-		List<Vector3> polygons = new List<Vector3> ();
-		List<int> triangles = new List<int>();
-		int triangleOffset = 0;
+		
 		
 		float cellX = 0f;
 		float cellY = 0f;
@@ -37,6 +35,8 @@ public class MazeManager : MonoBehaviour {
 				Bounds cell = new Bounds(new Vector3(cellX,cellY,0),new Vector3(cellSize,cellSize,cellSize));
 				cells.Add(cell);
 				
+				/*
+				
 				triangleOffset = polygons.Count;
 			
 				triangles.Add(triangleOffset);
@@ -46,16 +46,67 @@ public class MazeManager : MonoBehaviour {
 				triangles.Add(triangleOffset+3);
 				triangles.Add(triangleOffset);
 								
-				polygons.AddRange(CreateCellPolygon(cell));
+				polygons.AddRange(CreateCellPolygon(cell));*/
 
 			}
+		}
+		
+	//	mesh.vertices = polygons.ToArray();
+//		mesh.triangles = triangles.ToArray();
+	//	meshFilter.mesh = mesh;
+		
+	}
+	
+	
+	public List<Bounds> GetCellsIntersectedBy(List<Vector3> points) {
+	
+		List<Bounds> bounds = new List<Bounds>();
+		for(var i=0; i<points.Count-1;i++)
+		{
+			bounds.AddRange(GetCellsIntersectedBy(points[i],points[i+1]));
+		}
+		return bounds;
+	}
+	
+	
+	public List<Bounds> GetCellsNotIntersectedBy(List<Vector3> points) {
+		List<Bounds> bounds =this.GetCellsIntersectedBy(points);
+		return cells.Except(bounds).ToList();
+	}
+	
+	
+	public void RenderCells(List<Bounds> cells){
+	
+		Mesh mesh = new Mesh();
+		List<Vector3> polygons = new List<Vector3> ();
+		List<int> triangles = new List<int>();
+		int triangleOffset = 0;
+		
+		foreach(Bounds cell in cells) {
+			
+			triangleOffset = polygons.Count;
+		
+			triangles.Add(triangleOffset);
+			triangles.Add(triangleOffset+1);
+			triangles.Add(triangleOffset+2);
+			triangles.Add(triangleOffset+2);
+			triangles.Add(triangleOffset+3);
+			triangles.Add(triangleOffset);
+							
+			polygons.AddRange(CreateCellPolygon(cell));
+			
 		}
 		
 		mesh.vertices = polygons.ToArray();
 		mesh.triangles = triangles.ToArray();
 		meshFilter.mesh = mesh;
+	
+		
+		
 		
 	}
+	
+//	public void MarkCells(List<
 	
 	public List<Bounds> GetCellsIntersectedBy(Vector3 pointA, Vector3 pointB) {
 		float cellMinX;
@@ -93,9 +144,12 @@ public class MazeManager : MonoBehaviour {
 	
 		return intersectedBounds;
 	}
+	
+	
+	
 
-	public void AddToCell(BaseController controller) {
-		Bounds cell = GetRandomCell();
+	public void AddToCell(BaseController controller, List<Bounds> availableCells) {
+		Bounds cell = GetRandomCell(availableCells);
 		Vector3 size = controller.GetBounds().size;
 		float newScale = 0f;
 	
@@ -124,7 +178,7 @@ public class MazeManager : MonoBehaviour {
 		controller.transform.position = new Vector3(cell.center.x,cell.center.y,cell.center.z);
 	}
 	
-	public Bounds GetRandomCell(){
+	public Bounds GetRandomCell(List<Bounds> cells)	{
 		int cellIndex = Random.Range(0,cells.Count-1);
 		return cells[cellIndex];
 	}

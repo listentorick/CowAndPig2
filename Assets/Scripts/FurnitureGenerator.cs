@@ -28,7 +28,7 @@ public class FurnitureGenerator : MonoBehaviour {
 	
 	private Vector3 lastForestPosition = new Vector3(0,0,0);
 	
-	private List<Vector2> points;
+	private List<Vector3> points;
 	
 	public MazeManager mazeManager;	
 	private PathGenerator pathGenerator;
@@ -60,7 +60,7 @@ public class FurnitureGenerator : MonoBehaviour {
 		rockPool = new List<RockController>();
 		activeRocks = new List<RockController>();
 		
-		for(var i=0;i<10;i++) {
+		for(var i=0;i<30;i++) {
 			RockController rock = (RockController)Instantiate(rock1Prefab, new Vector3(-1000,0,0), Quaternion.identity);
 			rockPool.Add(rock);
 		}
@@ -74,11 +74,28 @@ public class FurnitureGenerator : MonoBehaviour {
 		
 		
 		points = pathGenerator.GeneratePath(new Vector2(0,0));
-				
-		mazeManager.CreateCells(new Vector3(0,0,0),20,10,20);
+		
+		//lets get the last cell
+		Vector3 firstCell = points[0];
+		Vector3 lastCell = points[points.Count-1];
+		int numCells = (int)System.Math.Ceiling((lastCell.x - firstCell.x)/20f);
+		
+		
+		//now
+		
+			
+		mazeManager.CreateCells(new Vector3(0,0,0),numCells,10,20);
+		
+			
+		List<Bounds> bounds = mazeManager.GetCellsNotIntersectedBy(points);
+		
+		//mazeManager.MarkCellsAsPath(bounds);
+		
+		mazeManager.RenderCells(bounds);
+	
 		
 		foreach(RockController rock in rockPool){
-			mazeManager.AddToCell(rock);
+			mazeManager.AddToCell(rock, bounds);
 		}
 
 		

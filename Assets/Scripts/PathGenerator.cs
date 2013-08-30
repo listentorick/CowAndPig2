@@ -6,15 +6,15 @@ public class PathGenerator {
 	
 	private  int rangeDX = 16;
     private int rangeDY = 4;
-    private float minDX = 8;
-    private float minDY = 4;
+    private float minDX = 20;
+    private float minDY = 20;
     private float sign = 1;
 	
-	public List<Vector2> GeneratePath(Vector2 firstPoint) {
-		List<Vector2> points = new List<Vector2>();
+	public List<Vector3> GeneratePath(Vector3 firstPoint) {
+		List<Vector3> points = new List<Vector3>();
 		points.Add(firstPoint);
 		
-		for(var i=0; i< 10; i++ ){
+		for(var i=0; i< 20; i++ ){
 			points.Add(GenerateNextPathPoint(points[points.Count-1],nextSign()));
 		}
 		
@@ -28,13 +28,13 @@ public class PathGenerator {
 		return points;
 	}
 	
-	public Vector2 GenerateNextPathPoint(Vector2 previousVector, float sign) {
+	public Vector3 GenerateNextPathPoint(Vector3 previousVector, float sign) {
 		float x = previousVector.x + Random.value%rangeDX+minDX;
 		float y = previousVector.y + ( Random.value%rangeDY+minDY)*sign;
 		if(y>0) {
 			y = 0;
 		}
-		return new Vector2(x,y);
+		return new Vector3(x,y,0);
 	}
 	
 
