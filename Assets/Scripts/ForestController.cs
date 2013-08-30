@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class ForestController : BaseController {
-
+	
+	
+	
 	// Use this for initialization
 	void Start () {
 	
@@ -14,6 +16,7 @@ public class ForestController : BaseController {
 	}
 	
 	public override Bounds GetBounds() {
-		return new Bounds(new Vector3(0,0,0),new Vector3(0,0,0));
+		return this.collider.bounds;
+		//return new Bounds(new Vector3(0,0,0),new Vector3(0,0,0));
 	}
 }

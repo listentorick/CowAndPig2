@@ -84,7 +84,7 @@ public class FurnitureGenerator : MonoBehaviour {
 		//now
 		
 			
-		mazeManager.CreateCells(new Vector3(0,0,0),numCells,10,20);
+		mazeManager.CreateCells(new Vector3(50,0,0),numCells,10,20);
 		
 			
 		List<Bounds> bounds = mazeManager.GetCellsNotIntersectedBy(points);
@@ -147,7 +147,10 @@ public class FurnitureGenerator : MonoBehaviour {
 	}
 	
 	private bool IsObjectPassed(BaseController gameObject){
-		Vector3 cameraToLeft = Camera.mainCamera.ViewportToWorldPoint(new Vector3(1,1, camera.position.z));
+		
+		
+		float distance = System.Math.Abs(camera.position.z - gameObject.GetBounds().center.z);
+		Vector3 cameraToLeft = Camera.mainCamera.ViewportToWorldPoint(new Vector3(0,1,distance));
 		//Bounds bounds = gameObject.GetBounds().extents.x;
 		
 		return (gameObject.GetTransform().position.x + gameObject.GetBounds().size.x) < cameraToLeft.x;
